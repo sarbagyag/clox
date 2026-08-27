@@ -1,7 +1,7 @@
 CC = clang
 CFLAGS = -Wall -Wextra -std=c99
 
-SRCS=src/main.c src/chunk.c src/memory.c src/value.c src/debug.c src/vm.c
+SRCS=src/main.c src/chunk.c src/memory.c src/value.c src/debug.c src/vm.c src/scanner.c src/compiler.c
 
 TARGET = clox
 
