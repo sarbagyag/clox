@@ -34,27 +34,6 @@ Value pop()
     return *vm.stackTop;
 }
 
-InterpretResult interpret(const char *source)
-{
-
-    Chunk chunk;
-    initChunk(&chunk);
-
-    if (!compile(source, &chunk))
-    {
-        freeChunk(&chunk);
-        return INTERPRET_COMPILE_ERROR;
-    }
-
-    vm.chunk = &chunk;
-    vm.ip = vm.chunk->code;
-
-    InterpretResult result = run();
-
-    freeChunk(&chunk);
-    return result;
-}
-
 static InterpretResult run()
 {
 #define READ_BYTE() (*vm.ip++)
@@ -81,7 +60,6 @@ static InterpretResult run()
         disassembleInstruction(vm.chunk,
                                (int)(vm.ip - vm.chunk->code));
 #endif
-
         uint8_t instruction;
         switch (instruction = READ_BYTE())
         {
@@ -118,4 +96,24 @@ static InterpretResult run()
 #undef READ_BYTE
 #undef READ_CONSTANT
 #undef BINARY_OP
+}
+
+InterpretResult interpret(const char *source)
+{
+    Chunk chunk;
+    initChunk(&chunk);
+
+    if (!compile(source, &chunk))
+    {
+        freeChunk(&chunk);
+        return INTERPRET_COMPILE_ERROR;
+    }
+
+    vm.chunk = &chunk;
+    vm.ip = vm.chunk->code;
+
+    InterpretResult result = run();
+
+    freeChunk(&chunk);
+    return result;
 }
